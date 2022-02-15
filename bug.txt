@@ -1,0 +1,5 @@
+Иногда результат выполнения кода неверный:
+Sicilian is NOT delivered
+Greek is delivered
+Pepperoni is delivered
+Greek is delivered
