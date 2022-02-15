@@ -19,11 +19,6 @@ public class Pizzeria {
         }
     }
 
-    private void backInQueue(Wagon wagon) {
-        queue.offerLast(wagon);
-        System.out.println(wagon.getPizzaName() + " is delivered");
-    }
-
     private class WagonStarter extends Thread {
         private final String pizzaName;
 
@@ -62,7 +57,8 @@ public class Pizzeria {
         public void run() {
             try {
                 sleep(500);
-                backInQueue(this);
+                System.out.println(pizzaName + " is delivered");
+                queue.offerLast(this);
             } catch (InterruptedException e) { // if any thread has interrupted the current thread
                 e.printStackTrace();
             }
