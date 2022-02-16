@@ -3,13 +3,13 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 public class Pizzeria {
-    private final BlockingDeque<Wagon> queue;
+    private final BlockingDeque<Object> queue;
     private final long startTime;
 
     public Pizzeria() {
         queue = new LinkedBlockingDeque<>(2);
-        queue.offer(new Wagon());
-        queue.offer(new Wagon());
+        queue.offer(new Object());
+        queue.offer(new Object());
         startTime = System.currentTimeMillis();
     }
 
@@ -29,11 +29,11 @@ public class Pizzeria {
         @Override
         public void run() {
             try {
-                Wagon w = queue.pollFirst(250, TimeUnit.MILLISECONDS);
-                if (w != null) {
+                Object o = queue.pollFirst(250, TimeUnit.MILLISECONDS);
+                if (o != null) {
                     sleep(500);
                     System.out.println(pizzaName + " is delivered");
-                    queue.offerLast(w);
+                    queue.offerLast(o);
                 } else {
                     System.out.println(pizzaName + " is NOT delivered");
                 }
@@ -41,9 +41,5 @@ public class Pizzeria {
                 e.printStackTrace();
             }
         }
-    }
-
-    private class Wagon extends Thread {
-
     }
 }
