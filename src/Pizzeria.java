@@ -31,8 +31,9 @@ public class Pizzeria {
             try {
                 Wagon w = queue.pollFirst(250, TimeUnit.MILLISECONDS);
                 if (w != null) {
-                    w.setPizzaName(pizzaName);
-                    new Thread(w).start();
+                    sleep(500);
+                    System.out.println(pizzaName + " is delivered");
+                    queue.offerLast(w);
                 } else {
                     System.out.println(pizzaName + " is NOT delivered");
                 }
@@ -43,25 +44,6 @@ public class Pizzeria {
     }
 
     private class Wagon extends Thread {
-        private String pizzaName;
 
-        public String getPizzaName() {
-            return pizzaName;
-        }
-
-        public void setPizzaName(String pizzaName) {
-            this.pizzaName = pizzaName;
-        }
-
-        @Override
-        public void run() {
-            try {
-                sleep(500);
-                System.out.println(pizzaName + " is delivered");
-                queue.offerLast(this);
-            } catch (InterruptedException e) { // if any thread has interrupted the current thread
-                e.printStackTrace();
-            }
-        }
     }
 }
