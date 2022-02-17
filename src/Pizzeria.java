@@ -3,13 +3,13 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 public class Pizzeria {
-    private final BlockingDeque<Object> queue;
+    private final BlockingDeque<PizzaCar> queue;
     private final long startTime;
 
     public Pizzeria() {
         queue = new LinkedBlockingDeque<>(2);
-        queue.offer(new Object());
-        queue.offer(new Object());
+        queue.offer(new PizzaCar());
+        queue.offer(new PizzaCar());
         startTime = System.currentTimeMillis();
     }
 
@@ -17,11 +17,14 @@ public class Pizzeria {
         if ((System.currentTimeMillis() - startTime) < 5000) {
             new Thread(() -> {
                 try {
-                    Object o = queue.pollFirst(250, TimeUnit.MILLISECONDS);
-                    if (o != null) {
-                        Thread.sleep(500);
+                    PizzaCar pizzaCar = queue.pollFirst(250, TimeUnit.MILLISECONDS);
+                    if (pizzaCar != null) {
+                        pizzaCar.setPizzaName(pizzaName);
+                        Thread t = new Thread(pizzaCar);
+                        t.start();
+                        t.join();
                         System.out.println(pizzaName + " is delivered");
-                        queue.offerLast(o);
+                        queue.offerLast(pizzaCar);
                     } else {
                         System.out.println(pizzaName + " is NOT delivered");
                     }
@@ -29,6 +32,24 @@ public class Pizzeria {
                     e.printStackTrace();
                 }
             }).start();
+        }
+    }
+
+    private class PizzaCar implements Runnable {
+        private String pizzaName;
+
+        public void setPizzaName(String pizzaName) {
+            this.pizzaName = pizzaName;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println("Begin to deliver " + pizzaName);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
